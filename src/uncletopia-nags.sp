@@ -101,7 +101,10 @@ public Action ResetScrambleAlert(Handle timer) {
 }
 
 public Action LongMapAlert(Handle timer) {
-    CPrintToChatAll("{unusual}This match has now lasted for 40 minutes.{default} Remember: You can type {unusual}!rtv{default} in chat to vote to change the map.");
+    CPrintToChatAll(
+        "{unusual}This match has now lasted for %d minutes.{default} Remember: You can type {unusual}!rtv{default} in chat to vote to change the map.",
+        RoundFloat(RTV_TIMER / 60)
+    );
 
     return Plugin_Stop;
 }
