@@ -30,8 +30,6 @@ release: clean all
 	cp -r config/translations build/release/addons/sourcemod/
 	cp build/*.smx build/release/addons/sourcemod/plugins
 	cp -r src build/release/addons/sourcemod/scripting/
-	cp config/umc_mapcycle.txt build/release
-	cp config/vote_warnings.txt build/release
 	tar -cjvf "build/$(revision).tar.bz2" -C build/release .
 	make clean
 
