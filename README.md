@@ -1,12 +1,14 @@
-# SourceMod Plugin Template
+# Uncletopia Nags plugin
 
-This is a simple template that provides a reasonable directory structure for a
-SourceMod plugin, as well as a `Makefile` that enables easy SourceMod
-compilation and release management.
+A small plugin to provide reminders for rtv, scramble and nominate functionality
+at appropriate points in the play cycle.
 
-Remember to:
+Use the following cvars:
 
-- [ ] rename `src/plugin.sp` to the name of your plugin/s
-- [ ] generate configs and translations in `config/sourcemod` and `config/translations` respectively
-- [ ] add plugin details to your plugin
-- [ ] have fun and be yourself
+```
+// How short does a round have to be to trigger the votescramble warning (5 minutes by default)
+ut_scramble_nag_timer 300.0
+
+// How long does a map have to run for to trigger the rtv reminder (40 minutes by default)
+ut_rtv_nag_timer 2400.0
+```
