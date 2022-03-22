@@ -13,11 +13,11 @@ public Plugin myinfo = {
     name        = "Uncletopia Nags",
     author      = "VIORA",
     description = "Provide players with timely and relevant updates.",
-    version     = "1.0.0",
+    version     = "0.1.0",
     url         = "https://github.com/crescentrose/uncletopia-nags"
 };
 
-static bool g_alertToScramble;
+static bool g_alertToScramble, g_didAlertToNominate;
 static int g_playedRounds;
 static Handle g_teamImbalanceTimer = INVALID_HANDLE;
 static Handle g_longMapTimer = INVALID_HANDLE;
@@ -26,6 +26,7 @@ static ConVar g_cvarRtvTimer, g_cvarScrambleTimer;
 public void OnPluginStart() {
     g_playedRounds = 0;
     g_alertToScramble = false;
+    g_didAlertToNominate = false;
 
     HookEvent("teamplay_round_start", Event_RoundStart);
     HookEvent("teamplay_round_win", Event_RoundEnd);
@@ -48,6 +49,7 @@ public void OnPluginStart() {
 public void OnMapStart() {
     g_playedRounds = 0;
     g_alertToScramble = false;
+    g_didAlertToNominate = false;
 
     CleanupTimer(g_teamImbalanceTimer);
     CleanupTimer(g_longMapTimer);
@@ -62,6 +64,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 
     if (ShouldTriggerNominationReminder()) {
         CPrintToChatAll("{unusual}Remember:{default} You can type {unusual}!nominate{default} in chat to propose which map to play next.");
+        g_didAlertToNominate = true;
     }
 
     CleanupTimer(g_teamImbalanceTimer);
@@ -111,6 +114,9 @@ public Action LongMapAlert(Handle timer) {
 
 
 bool ShouldTriggerNominationReminder() {
+    if (g_didAlertToNominate)
+        return false;
+
     ConVar cvarWinLimit = FindConVar("mp_winlimit");
     ConVar cvarMaxRounds = FindConVar("mp_maxrounds");
     int maxRounds = cvarMaxRounds.IntValue;
