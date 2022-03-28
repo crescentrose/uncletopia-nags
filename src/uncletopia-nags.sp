@@ -3,6 +3,8 @@
 #include <sourcemod>
 #include <morecolors>
 
+#pragma newdecls required
+
 // TODO: cvars?
 #define SCRAMBLE_TIMER g_cvarScrambleTimer.FloatValue
 #define RTV_TIMER g_cvarRtvTimer.FloatValue
@@ -13,14 +15,13 @@ public Plugin myinfo = {
     name        = "Uncletopia Nags",
     author      = "VIORA",
     description = "Provide players with timely and relevant updates.",
-    version     = "0.1.0",
+    version     = "0.2.0",
     url         = "https://github.com/crescentrose/uncletopia-nags"
 };
 
 static bool g_alertToScramble, g_didAlertToNominate;
 static int g_playedRounds;
-static Handle g_teamImbalanceTimer = INVALID_HANDLE;
-static Handle g_longMapTimer = INVALID_HANDLE;
+static Handle g_teamImbalanceTimer, g_longMapTimer;
 static ConVar g_cvarRtvTimer, g_cvarScrambleTimer;
 
 public void OnPluginStart() {
@@ -83,7 +84,8 @@ public void Event_WinPanel(Event event, const char[] name, bool dontBroadcast) {
     }
 }
 
-public TF2_OnWaitingForPlayersEnd() {
+public void TF2_OnWaitingForPlayersEnd() {
+    CPrintToChatAll("{unusual}Remember:{default} If you don't want to play this map, you can type {unusual}!rtv{default} in chat to vote to change the map.");
     CleanupTimer(g_teamImbalanceTimer);
     g_alertToScramble = false;
 }
@@ -98,7 +100,7 @@ public void Event_SetupEnds(Event event, const char[] name, bool dontBroadcast) 
 
 public Action ResetScrambleAlert(Handle timer) {
     g_alertToScramble = false;
-    g_teamImbalanceTimer = INVALID_HANDLE;
+    CleanupTimer(g_teamImbalanceTimer);
 
     return Plugin_Stop;
 }
@@ -145,7 +147,9 @@ bool ShouldTriggerNominationReminder() {
     return false;
 }
 
-void CleanupTimer(Handle timer) {
-    if (IsValidHandle(timer))
-        CloseHandle(timer);
+void CleanupTimer(Handle &timer) {
+    if (timer != null) {
+        KillTimer(timer);
+        timer = null;
+    }
 }
