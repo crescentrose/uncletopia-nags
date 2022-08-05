@@ -15,7 +15,7 @@ public Plugin myinfo = {
     name        = "Uncletopia Nags",
     author      = "VIORA",
     description = "Provide players with timely and relevant updates.",
-    version     = "0.2.0",
+    version     = "0.2.1",
     url         = "https://github.com/crescentrose/uncletopia-nags"
 };
 
@@ -60,13 +60,16 @@ public void OnMapStart() {
 
 public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast) {
     if (g_alertToScramble) {
-        CPrintToChatAll("{red}Teams may be unbalanced.{default} Remember: You can type {red}!scramble{default} in chat to vote to scramble the teams.");
+        MC_PrintToChatAll("{red}Teams may be unbalanced.{default} Remember: You can type {red}!scramble{default} in chat to vote to scramble the teams.");
     }
 
     if (ShouldTriggerNominationReminder()) {
-        CPrintToChatAll("{unusual}Remember:{default} You can type {unusual}!nominate{default} in chat to propose which map to play next.");
+        MC_PrintToChatAll("{unusual}Remember:{default} You can type {unusual}!nominate{default} in chat to propose which map to play next.");
         g_didAlertToNominate = true;
     }
+
+    MC_PrintToChatAll("{unusual}NOTICE: Be aware there are {red}fake uncletopia servers{unusual} spreading malware & harvesting IPs");
+    MC_PrintToChatAll("{unusual}Please visit uncletopia.com/servers for a list of safe servers");
 
     CleanupTimer(g_teamImbalanceTimer);
 
@@ -85,7 +88,7 @@ public void Event_WinPanel(Event event, const char[] name, bool dontBroadcast) {
 }
 
 public void TF2_OnWaitingForPlayersEnd() {
-    CPrintToChatAll("{unusual}Remember:{default} If you don't want to play this map, you can type {unusual}!rtv{default} in chat to vote to change the map.");
+    MC_PrintToChatAll("{unusual}Remember:{default} If you don't want to play this map, you can type {unusual}!rtv{default} in chat to vote to change the map.");
     CleanupTimer(g_teamImbalanceTimer);
     g_alertToScramble = false;
 }
@@ -106,7 +109,7 @@ public Action ResetScrambleAlert(Handle timer) {
 }
 
 public Action LongMapAlert(Handle timer) {
-    CPrintToChatAll(
+    MC_PrintToChatAll(
         "{unusual}This match has now lasted for %d minutes.{default} Remember: You can type {unusual}!rtv{default} in chat to vote to change the map.",
         RoundFloat(RTV_TIMER / 60)
     );
